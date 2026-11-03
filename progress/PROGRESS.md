@@ -46,7 +46,7 @@ Statuses verified by the final reviewer on 2026-11-03 by re-running the checks (
 | T1.4 | Brand files                                  | DONE        | UNIT         | —          | 2026-11-03 |
 | T1.5 | Run reporter and structured logs             | DONE        | LOCAL + UNIT | —          | 2026-11-03 |
 | T1.6 | Instagram read-only capability check         | NEEDS_OWNER | code + MOCKED tests (tests/ops/setup.test.ts) | M3–M6 | |
-| T1.7 | GitHub Actions check                         | NEEDS_OWNER | ci-spike.yml written, not run | M2, M11 | |
+| T1.7 | GitHub Actions check                         | DONE        | CI — ci-spike runs 41721722741 + 41721949100 succeeded (claude -p valid JSON 2–3 s; 2 s render 21–23 s; ~1 billed min each) | — | 2026-11-04 |
 | T2.1 | Remotion setup                               | DONE        | LOCAL — tests/render/render.e2e.test.ts (1080x1920 renders) | — | 2026-11-03 |
 | T2.2 | Slice scenes and captions                    | DONE        | LOCAL — scene stills + text-bounds.json | — | 2026-11-03 |
 | T2.3 | Text-to-speech                               | DONE        | LOCAL — Kokoro beats in out/2026-11-03-90/beat-*.wav | — | 2026-11-03 |
@@ -206,3 +206,4 @@ Node packages (exact pins): remotion + @remotion/{cli,renderer,bundler,google-fo
 - **2026-11-04:** M2 done by owner — doctor: CLAUDE_CODE_OAUTH_TOKEN PRESENT (validity will be proven by ci-spike, T1.7). GitHub CLI not logged in yet (M11 pending).
 - **2026-11-04:** M11 done (gh logged in as the owner's account). Created PRIVATE repo reels-engine and pushed main. Scheduled workflows produce/publish/analyze/learn DISABLED until staging (T7.4); ci + ci-spike active. Added `npm run github:secrets` (allowlist-only, values via stdin, never printed; tests/ops/github-secrets.test.ts 3 passed). Waiting on owner confirmation to upload CLAUDE_CODE_OAUTH_TOKEN for T1.7.
 - **2026-11-04:** CI GREEN on GitHub (run 41720347963, 4m53s): typecheck, lint, format, unit+mocked tests (ffmpeg + light Python deps installed in CI), agent drift, publish-cron drift, gitleaks full history, render smoke. Evidence: CI. Fixed along the way: inspiration files formatting; .claude/settings.local.json untracked; CI audio deps. G1 'CI from a clean checkout' now satisfied.
+- **2026-11-04:** Owner uploaded CLAUDE_CODE_OAUTH_TOKEN (`gh secret list` shows only that name). **T1.7 DONE (CI):** ci-spike succeeded twice (runs 41721722741, 41721949100): `claude -p` returned valid JSON in 2–3 s on GitHub, 2 s Remotion render in 21–23 s, ~1 billed minute per run. C02 → LIVE_VERIFIED. Measurements in DEC-014. Next owner steps: M3–M7 (Instagram, Facebook Page, Meta app, Cloudflare), M8 Telegram.

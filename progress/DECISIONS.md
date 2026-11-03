@@ -122,3 +122,9 @@ All kickoff answers below (DEC-001..DEC-012) were applied as defaults on 2026-11
 | Date | Setting | From → To | Authorized by | Note |
 |------|---------|-----------|---------------|------|
 | 2026-11-03 | PUBLISH_MODE | (new) → dry_run | default | initial state; no live writes |
+
+### DEC-014: GitHub Actions feasibility measurements (T1.7)
+- **Date:** 2026-11-04 · **Decided by:** Claude Code (engineering, measured)
+- **Evidence:** ci-spike runs 41721722741 (48 s wall, ~1 billed min; `claude -p` 3 s, returned valid JSON; 2 s Remotion render 21 s) and 41721949100 (56 s wall, ~1 billed min; `claude -p` 2 s; render 23 s). ci.yml full run ≈ 4m53s.
+- **Decision:** DEC-004 (run on GitHub Actions) stays. Full produce-run minutes are still to be measured in staging (T7.4).
+- **Revisit when:** T7.4 staging numbers are in.
