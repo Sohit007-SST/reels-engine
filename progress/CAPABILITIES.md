@@ -33,3 +33,12 @@ A mocked test never makes anything LIVE_VERIFIED. Re-check docs when a version c
 - C14/C15: `faster-whisper` 1.2.1 and `kokoro-onnx` 0.6.1 are installed in `.venv` and import cleanly; no model downloaded or run yet.
 - C17: Remotion 4.0.540 packages installed; no render run yet.
 - All outbound HTTP in the code base goes through `src/lib/http.ts` (timeouts, bounded retry, network spy, dry-run write guard).
+
+## Notes (final review 2026-11-03) — no docs were read with URLs this session, so nothing is DOCS_VERIFIED; LOCAL results do not change a status
+- C01: LOCAL — 3 real `claude -p --output-format json` calls (CLI 2.1.317, sanitized env HOME/PATH/USER); agents ran in `npm run produce --dry-run`.
+- C14: LOCAL — faster-whisper word timings on the fixture, drift ≤ 50 ms.
+- C15: LOCAL (Mac only) — Kokoro beats synthesized; Linux not tested (T1.7).
+- C17: LOCAL (Mac only) — Remotion renders 1080x1920 MP4; Linux not tested (T1.7).
+- C22: LOCAL — https://trends.google.com/trending/rss?geo=IN read-only GET 200 text/xml (feed fetched, docs not read).
+- C03–C13, C16, C18–C21: only MOCKED contract tests; need keys/logins (M2–M11).
+
