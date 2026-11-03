@@ -36,6 +36,15 @@ jobs:
         run: npm run lint
       - name: Format check
         run: npm run format:check
+      - name: Install ffmpeg (audio mix + QA tests)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - name: Python venv for music/sfx tests (light deps only; Kokoro/whisper tests auto-skip without models/)
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q $(grep -E '^(numpy|scipy|soundfile|pyloudnorm)==' requirements.txt)
       - name: Unit + mocked contract tests
         run: npm test
       - name: Agent instructions drift check (.claude/agents must match agents/)
