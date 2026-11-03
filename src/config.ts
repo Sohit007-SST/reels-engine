@@ -359,6 +359,43 @@ export function loadWatchlist(file = path.join(BRAND_DIR, 'watchlist.json')): Pr
   return readJson(file, Watchlist);
 }
 
+/**
+ * Owner inspiration & feedback (brand/inspiration.json). Owner-written, but links/notes are still
+ * passed to agents as data only. A missing file means "no inspiration yet".
+ */
+export const OwnerInspiration = z.object({
+  schemaVersion: z.literal(1),
+  feedback: z.array(z.object({ date: z.string(), note: z.string().max(1000) })).default([]),
+  inspiration: z
+    .array(
+      z.object({
+        link: z.string().max(500).optional(),
+        whatILike: z.string().max(1000),
+        useFor: z
+          .enum(['hook', 'format', 'pacing', 'visual_style', 'topic', 'voice', 'other'])
+          .default('other'),
+      }),
+    )
+    .default([]),
+  topicIdeas: z.array(z.string().max(300)).default([]),
+  avoid: z.array(z.string().max(300)).default([]),
+});
+export type OwnerInspiration = z.infer<typeof OwnerInspiration>;
+
+export async function loadInspiration(
+  file = path.join(BRAND_DIR, 'inspiration.json'),
+): Promise<OwnerInspiration | null> {
+  try {
+    return await readJson(file, OwnerInspiration);
+  } catch (err) {
+    const code =
+      (err as NodeJS.ErrnoException)?.code ??
+      ((err as { cause?: NodeJS.ErrnoException })?.cause as NodeJS.ErrnoException | undefined)?.code;
+    if (code === 'ENOENT') return null;
+    throw err;
+  }
+}
+
 /** Slots (IST "HH:MM") for a reels-per-day count; falls back to the first N of the largest list. */
 export function slotsFor(brand: Brand, reelsPerDay: number): string[] {
   const exact = brand.slots[String(reelsPerDay)];

@@ -15,6 +15,7 @@ import {
   applyWritePolicy,
   loadBlocklist,
   loadBrand,
+  loadInspiration,
   loadConfig,
   loadHookLibrary,
   loadWatchlist,
@@ -283,8 +284,9 @@ async function runProduce(cfg: Config, args: string[], logger: Logger, runId: st
   });
 
   const { runIdeas } = await import('./ideas');
+  const inspiration = await loadInspiration();
   const ideas = await runIdeas(
-    { runId, date, now, brand, hookLibrary, logger, dataDir, ...(model ? { model } : {}) },
+    { runId, date, now, brand, hookLibrary, logger, dataDir, inspiration, ...(model ? { model } : {}) },
     trendFile,
     count,
   );

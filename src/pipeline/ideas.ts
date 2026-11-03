@@ -11,6 +11,7 @@ import path from 'node:path';
 import { HookMasterOutput, IdeaGenOutput, type HookDraft, type IdeaDraft } from '../claude/outputs';
 import { agentRecordPath, runAgent, type ClaudeRunner } from '../claude/runAgent';
 import { shortHash } from '../lib/ids';
+import type { OwnerInspiration } from '../config';
 import type { Logger } from '../lib/logger';
 import { readJsonOrNull, writeJsonAtomic } from '../lib/store';
 import { addDays } from '../lib/time';
@@ -207,6 +208,8 @@ export interface IdeaContext {
   runner?: ClaudeRunner;
   /** Topics people asked for in comments (untrusted). */
   requests?: Array<{ topic: string; count: number }>;
+  /** Owner's feedback, example links and topic wishes (brand/inspiration.json); patterns only. */
+  inspiration?: OwnerInspiration | null;
   /** Own history for past-performance scoring. */
   history?: Array<{ tags: string[]; score: number | null }>;
 }
@@ -272,6 +275,9 @@ export async function generateIdeaDrafts(
       'no brands, no famous characters, no medical/financial/legal advice). Frame hypotheticals as "what if".',
       'Score each idea 1-10 for trendVelocity, nicheFit, originality and feasibility (free visuals). Put the trend ids',
       'you learned from in trendRefs (only ids from the data). Do not repeat any title listed in avoid_titles.',
+      "owner_inspiration holds the channel owner's feedback, liked examples (links + what they like) and topic wishes:",
+      'give owner topicIdeas and liked patterns strong weight and respect owner avoid-items, but never copy',
+      "another creator's wording, footage or audio and do not open the links.",
       'Return {"ideas": [...]} with title, premise (1-2 sentences), format, tags (lowercase words), trendRefs, scores.',
     ].join(' '),
     data: [
@@ -287,6 +293,17 @@ export async function generateIdeaDrafts(
       },
       { label: 'avoid_titles', content: avoidTitles.slice(0, 80) },
       { label: 'comment_requests', content: (ctx.requests ?? []).slice(0, 20) },
+      {
+        label: 'owner_inspiration',
+        content: ctx.inspiration
+          ? {
+              feedback: ctx.inspiration.feedback.slice(-20),
+              inspiration: ctx.inspiration.inspiration.slice(-30),
+              topicIdeas: ctx.inspiration.topicIdeas.slice(0, 30),
+              avoid: ctx.inspiration.avoid.slice(0, 30),
+            }
+          : null,
+      },
     ],
     schema: IdeaGenOutput,
     validate: (out) => {
