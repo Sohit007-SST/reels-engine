@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-11-03-90",
+  "promptVersion": "fixture-specs@1",
+  "model": "hand-written",
+  "language": "en",
+  "placement": "main",
+  "format": "what_if",
+  "hook": {
+    "formulaId": "what_if",
+    "spoken": "What if the Moon vanished tonight?",
+    "onScreen": "NO MOON TONIGHT?",
+    "alternates": []
+  },
+  "beats": [
+    {
+      "role": "hook",
+      "voiceover": "What if the Moon vanished tonight?",
+      "onScreenText": "NO MOON TONIGHT?",
+      "sceneType": "HookTitle",
+      "visual": {
+        "tier": "A"
+      },
+      "motion": "zoom_punch",
+      "sfx": "hit"
+    },
+    {
+      "role": "setup",
+      "voiceover": "Imagine losing the gravity that tugs on our oceans and helps steady our planet’s tilt.",
+      "onScreenText": "NO MORE PULL",
+      "sceneType": "KineticText",
+      "visual": {
+        "tier": "A"
+      },
+      "motion": "slide_up",
+      "sfx": "whoosh"
+    },
+    {
+      "role": "escalation",
+      "voiceover": "First, the tides would shrink to about a third of their size.",
+      "onScreenText": "TIDES SHRINK",
+      "sceneType": "KineticText",
+      "visual": {
+        "tier": "A"
+      },
+      "motion": "slide_up",
+      "sfx": "pop"
+    },
+    {
+      "role": "escalation",
+      "voiceover": "Nights would turn much darker, and animals that hunt by moonlight would struggle.",
+      "onScreenText": "DARKER NIGHTS",
+      "sceneType": "KineticText",
+      "visual": {
+        "tier": "A"
+      },
+      "motion": "slide_up",
+      "sfx": "whoosh"
+    },
+    {
+      "role": "escalation",
+      "voiceover": "Over a very long time, Earth's tilt could wobble, and the seasons might swing wildly.",
+      "onScreenText": "WOBBLING SEASONS",
+      "sceneType": "KineticText",
+      "visual": {
+        "tier": "A"
+      },
+      "motion": "slide_up",
+      "sfx": "riser"
+    },
+    {
+      "role": "payoff",
+      "voiceover": "That quiet rock in the sky is secretly keeping our world calm.",
+      "onScreenText": "OUR QUIET GUARDIAN",
+      "sceneType": "KineticText",
+      "visual": {
+        "tier": "A"
+      },
+      "motion": "zoom_in",
+      "sfx": "ding"
+    },
+    {
+      "role": "cta",
+      "voiceover": "Which change would you miss the most? Tell me below.",
+      "onScreenText": "WHAT WOULD YOU MISS?",
+      "sceneType": "CTAEnd",
+      "visual": {
+        "tier": "A"
+      },
+      "motion": "fade",
+      "sfx": "none"
+    }
+  ],
+  "caption": "What if the Moon vanished tonight?\nTides would shrink and nights would go dark.\nWhich change would you miss most?\nVisuals and voice made with AI. 'What if' scenarios are hypothetical.",
+  "captionVersion": 1,
+  "hashtags": ["#whatif", "#space", "#science"],
+  "commentQuestion": "Which change would you miss the most?",
+  "facts": [
+    {
+      "claim": "Without the Moon, tides would shrink to about a third of their size.",
+      "sourceUrl": null,
+      "publisher": null,
+      "retrievedAt": null,
+      "supportingQuote": null,
+      "status": "HYPOTHETICAL",
+      "verifiedAt": null,
+      "verifierNote": "What-if scenario framed with would; only the Sun would raise tides."
+    },
+    {
+      "claim": "Nights would be much darker and moonlight hunters would struggle.",
+      "sourceUrl": null,
+      "publisher": null,
+      "retrievedAt": null,
+      "supportingQuote": null,
+      "status": "HYPOTHETICAL",
+      "verifiedAt": null,
+      "verifierNote": "What-if scenario framed with would."
+    },
+    {
+      "claim": "Over a very long time, Earth’s tilt could wobble and seasons might swing.",
+      "sourceUrl": null,
+      "publisher": null,
+      "retrievedAt": null,
+      "supportingQuote": null,
+      "status": "HYPOTHETICAL",
+      "verifiedAt": null,
+      "verifierNote": "Hedged what-if (could/might)."
+    }
+  ],
+  "coverOffsetMs": 400,
+  "tags": {
+    "hookFormula": "what_if",
+    "format": "what_if",
+    "visualTiers": ["A"],
+    "targetSeconds": 30,
+    "slot": null
+  },
+  "musicMood": "wonder",
+  "ideaId": null
+}

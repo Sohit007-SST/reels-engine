@@ -1,0 +1,30 @@
+name: Setup Node (lockfile install)
+description: >-
+  Node 22 LTS from .nvmrc, npm cache, clean install from package-lock.json.
+  With remotion=false the Remotion browser is not cached or downloaded (publish/analyze jobs).
+inputs:
+  remotion:
+    description: Cache Remotion's headless browser (only jobs that render need it).
+    required: false
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v5
+      with:
+        node-version-file: .nvmrc
+        cache: npm
+    - name: Cache Remotion browser
+      if: inputs.remotion == 'true'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/remotion
+          node_modules/.remotion
+        key: remotion-browser-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+    - name: Clean install from lockfile
+      shell: bash
+      env:
+        # Jobs that do not render never download Remotion's browser.
+        REMOTION_SKIP_BROWSER_DOWNLOAD: ${{ inputs.remotion == 'true' && '' || '1' }}
+      run: npm ci --no-audit --no-fund

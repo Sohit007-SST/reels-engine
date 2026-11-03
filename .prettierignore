@@ -1,0 +1,11 @@
+node_modules
+out
+dist
+.venv
+models
+api_keys
+progress
+agents_comms
+package-lock.json
+PROGRESS.md
+tests/fixtures/injection/

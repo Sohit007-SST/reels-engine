@@ -1,0 +1,58 @@
+# CI on every push and pull request (spec 8): clean install, typecheck, lint, tests, gitleaks,
+# agent drift check, publish-cron drift check and a short Remotion render smoke test.
+# No secrets are used here.
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  ENV_FILE: api_keys/.env.example
+  PUBLISH_MODE: dry_run
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # gitleaks scans the full history
+      - uses: ./.github/actions/setup-node
+        with:
+          remotion: 'true'
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Format check
+        run: npm run format:check
+      - name: Unit + mocked contract tests
+        run: npm test
+      - name: Agent instructions drift check (.claude/agents must match agents/)
+        run: npm run agents:sync -- --check
+      - name: Publish schedule drift check (publish.yml crons match brand.json slots)
+        run: npx tsx src/cli/gen-publish-cron.ts --check
+      - name: Secret scan (gitleaks, full history)
+        env:
+          GITLEAKS_VERSION: 8.30.1
+        run: |
+          curl -sSfL --max-time 60 --retry 3 -o /tmp/gitleaks.tgz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          tar -xzf /tmp/gitleaks.tgz -C /tmp gitleaks
+          /tmp/gitleaks git --redact --no-banner --config .gitleaks.toml .
+      - name: Render smoke test (Blank composition, no keys)
+        run: |
+          mkdir -p out/ci
+          npx remotion render remotion/index.ts Blank out/ci/smoke.mp4 --log=error
+          npx remotion ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 out/ci/smoke.mp4 | grep -q '1080,1920'
+          echo "smoke render OK: $(npx remotion ffprobe -v error -show_entries format=duration -of csv=p=0 out/ci/smoke.mp4)s"

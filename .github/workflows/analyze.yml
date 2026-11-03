@@ -1,0 +1,71 @@
+# Daily insights + report (spec 8): 23:23 IST = 17:53 UTC. Read-only Instagram insights; no Remotion, no Python.
+name: analyze
+
+on:
+  schedule:
+    - cron: '53 17 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write # commits data/metrics data/runs progress/runs
+
+concurrency:
+  group: analyze
+  cancel-in-progress: false
+
+env:
+  ENV_FILE: api_keys/.env # absent on the runner; settings come from repository variables
+  PUBLISH_MODE: ${{ vars.PUBLISH_MODE || 'dry_run' }}
+  REPLY_MODE: ${{ vars.REPLY_MODE || 'approval' }}
+  LEARNING_MODE: ${{ vars.LEARNING_MODE || 'propose' }}
+  REELS_PER_DAY: ${{ vars.REELS_PER_DAY || '3' }}
+  PIPELINE_PAUSED: ${{ vars.PIPELINE_PAUSED || 'false' }}
+  TIMEZONE: ${{ vars.TIMEZONE || 'Asia/Kolkata' }}
+  META_GRAPH_VERSION: ${{ vars.META_GRAPH_VERSION }}
+  CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+  MAX_DAILY_SPEND_USD: ${{ vars.MAX_DAILY_SPEND_USD || '0' }}
+  ARTIFACT_RETENTION_DAYS: ${{ vars.ARTIFACT_RETENTION_DAYS || '3' }}
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - name: Kill switch
+        id: gate
+        run: bash .github/scripts/kill-switch.sh
+      - uses: ./.github/actions/setup-node
+        if: steps.gate.outputs.paused != 'true'
+        with:
+          remotion: 'false'
+      - name: Run analyze
+        id: run
+        if: steps.gate.outputs.paused != 'true'
+        timeout-minutes: 15
+        env:
+          META_PAGE_ACCESS_TOKEN: ${{ secrets.META_PAGE_ACCESS_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          t0=$(date +%s)
+          npm run analyze && npm run report
+          echo "seconds=$(( $(date +%s) - t0 ))" >> "$GITHUB_OUTPUT"
+      - name: Commit analyze state (own paths only)
+        if: always() && steps.gate.outputs.paused != 'true'
+        run: |
+          bash .github/scripts/commit-state.sh "state(analyze): $(TZ=Asia/Kolkata date +%F)" data/metrics data/runs progress/runs
+      - name: Minutes report
+        if: always()
+        env:
+          RUN_S: ${{ steps.run.outputs.seconds }}
+        run: |
+          echo "analyze: ${RUN_S:-n/a}s" >> "$GITHUB_STEP_SUMMARY"
+      - name: Alert on failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: bash .github/scripts/alert.sh "analyze workflow failed"

@@ -1,0 +1,94 @@
+# T1.7 GitHub Actions feasibility check (manual only). Needs M2 (CLAUDE_CODE_OAUTH_TOKEN secret)
+# and M11 (repo + gh login). Proves on a real runner that:
+#   1. a clean install from the lockfile works,
+#   2. ONE bounded `claude -p` prompt returns valid JSON with the subscription token
+#      (never --bare: bare mode ignores CLAUDE_CODE_OAUTH_TOKEN),
+#   3. a short Remotion clip renders,
+# and reports the minutes used. Record the numbers in progress/DECISIONS.md (run it twice).
+name: ci-spike
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-spike
+  cancel-in-progress: false
+
+env:
+  ENV_FILE: api_keys/.env.example
+  PUBLISH_MODE: dry_run
+
+jobs:
+  spike:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Start clock
+        id: clock
+        run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-node
+        with:
+          remotion: 'true'
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code --no-audit --no-fund
+      - name: Bounded claude -p check (1 turn, no tools, 3-minute cap)
+        id: claude
+        env:
+          # The ONLY secret this job sees. No Meta / Cloudflare / Telegram keys here.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -z "${CLAUDE_CODE_OAUTH_TOKEN}" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN is MISSING (do M2, then upload it after confirming the allowlist)" >&2
+            exit 1
+          fi
+          claude --version
+          t0=$(date +%s)
+          echo 'Reply with exactly this JSON and nothing else: {"ok":true,"n":3}' \
+            | timeout 180 env -i PATH="$PATH" HOME="$HOME" CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN" \
+              claude -p --output-format json --max-turns 1 --tools "" --no-session-persistence > out-claude.json
+          t1=$(date +%s)
+          node -e '
+            const r = JSON.parse(require("fs").readFileSync("out-claude.json", "utf8"));
+            if (r.is_error) { console.error("claude reported an error"); process.exit(1); }
+            const text = String(r.result ?? "").trim().replace(/^```(json)?|```$/g, "").trim();
+            const v = JSON.parse(text);
+            if (v.ok !== true || v.n !== 3) { console.error("unexpected JSON shape"); process.exit(1); }
+            console.log("claude -p returned valid JSON");
+          '
+          echo "seconds=$((t1 - t0))" >> "$GITHUB_OUTPUT"
+          rm -f out-claude.json
+      - name: Render smoke clip
+        id: render
+        run: |
+          mkdir -p out/ci
+          t0=$(date +%s)
+          npx remotion render remotion/index.ts Blank out/ci/spike.mp4 --log=error
+          t1=$(date +%s)
+          echo "seconds=$((t1 - t0))" >> "$GITHUB_OUTPUT"
+          npx remotion ffprobe -v error -show_entries format=duration -of csv=p=0 out/ci/spike.mp4
+      - name: Minutes report
+        if: always()
+        env:
+          START: ${{ steps.clock.outputs.start }}
+          CLAUDE_S: ${{ steps.claude.outputs.seconds }}
+          RENDER_S: ${{ steps.render.outputs.seconds }}
+        run: |
+          now=$(date +%s)
+          total=$((now - START))
+          {
+            echo "## ci-spike minutes report"
+            echo ""
+            echo "| Measure | Value |"
+            echo "|---|---|"
+            echo "| Job wall time so far | ${total}s (~$(( (total + 59) / 60 )) billed minutes) |"
+            echo "| claude -p call | ${CLAUDE_S:-n/a}s |"
+            echo "| Render smoke | ${RENDER_S:-n/a}s |"
+            echo "| Runner | ${RUNNER_OS} ${RUNNER_ARCH} |"
+            echo ""
+            echo "Copy these numbers into progress/DECISIONS.md (T1.7)."
+          } >> "$GITHUB_STEP_SUMMARY"
+          cat "$GITHUB_STEP_SUMMARY"

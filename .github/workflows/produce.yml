@@ -1,0 +1,157 @@
+# Daily production run (spec 8): 05:17 IST = 23:47 UTC the previous day.
+# trends -> ideas -> scripts -> fact check -> voice -> visuals -> render -> QA -> MP4 artifacts
+# -> Telegram previews -> commit state + progress/runs/DATE.md.
+# Nothing is uploaded to Instagram here. Each finished reel waits as a GitHub Actions artifact
+# named after its reel id (out/artifacts/<reelId>/<reelId>.mp4), kept ARTIFACT_RETENTION_DAYS.
+name: produce
+
+on:
+  schedule:
+    - cron: '47 23 * * *' # 05:17 IST daily
+  workflow_dispatch:
+    inputs:
+      count:
+        description: Number of reels (blank = REELS_PER_DAY)
+        required: false
+        default: ''
+
+permissions:
+  contents: write # commits data/ state and progress/runs/
+
+concurrency:
+  group: produce
+  cancel-in-progress: false
+
+env:
+  ENV_FILE: api_keys/.env # absent on the runner; settings come from repository variables
+  PUBLISH_MODE: ${{ vars.PUBLISH_MODE || 'dry_run' }}
+  REPLY_MODE: ${{ vars.REPLY_MODE || 'approval' }}
+  LEARNING_MODE: ${{ vars.LEARNING_MODE || 'propose' }}
+  REELS_PER_DAY: ${{ vars.REELS_PER_DAY || '3' }}
+  PIPELINE_PAUSED: ${{ vars.PIPELINE_PAUSED || 'false' }}
+  TIMEZONE: ${{ vars.TIMEZONE || 'Asia/Kolkata' }}
+  META_GRAPH_VERSION: ${{ vars.META_GRAPH_VERSION }}
+  IMAGE_PROVIDER: ${{ vars.IMAGE_PROVIDER || 'cloudflare' }}
+  VIDEO_PROVIDER: ${{ vars.VIDEO_PROVIDER || 'hf_free' }}
+  TTS_PROVIDER: ${{ vars.TTS_PROVIDER || 'kokoro' }}
+  CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+  MAX_DAILY_SPEND_USD: ${{ vars.MAX_DAILY_SPEND_USD || '0' }}
+  ARTIFACT_RETENTION_DAYS: ${{ vars.ARTIFACT_RETENTION_DAYS || '3' }}
+
+jobs:
+  produce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - name: Kill switch
+        id: gate
+        run: bash .github/scripts/kill-switch.sh
+      - uses: ./.github/actions/setup-node
+        if: steps.gate.outputs.paused != 'true'
+        with:
+          remotion: 'true'
+      - uses: ./.github/actions/setup-python
+        if: steps.gate.outputs.paused != 'true'
+      - name: Install Claude Code CLI
+        if: steps.gate.outputs.paused != 'true'
+        run: npm install -g @anthropic-ai/claude-code --no-audit --no-fund
+      - name: Produce reels
+        id: produce
+        if: steps.gate.outputs.paused != 'true'
+        timeout-minutes: 100
+        env:
+          # Agents get only CLAUDE_CODE_OAUTH_TOKEN (sanitized env in src/claude/runAgent.ts).
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          META_PAGE_ACCESS_TOKEN: ${{ secrets.META_PAGE_ACCESS_TOKEN }} # read-only trend sources
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          COUNT: ${{ inputs.count }}
+        run: |
+          t0=$(date +%s)
+          if [ -n "${COUNT:-}" ]; then npm run produce -- --count "$COUNT"; else npm run produce; fi
+          echo "seconds=$(( $(date +%s) - t0 ))" >> "$GITHUB_OUTPUT"
+      - name: List finished reels for upload
+        id: reels
+        if: always() && steps.gate.outputs.paused != 'true'
+        run: |
+          i=0
+          if [ -d out/artifacts ]; then
+            for d in out/artifacts/*/; do
+              name=$(basename "$d")
+              [ -f "out/artifacts/$name/$name.mp4" ] || continue
+              i=$((i + 1))
+              echo "r${i}=${name}" >> "$GITHUB_OUTPUT"
+            done
+          fi
+          echo "count=${i}" >> "$GITHUB_OUTPUT"
+          if [ "$i" -gt 5 ]; then
+            echo "More than 5 reels; add upload steps in produce.yml (only the first 5 are kept)" >&2
+            exit 1
+          fi
+      # One artifact per reel (name = reel id) so publish can fetch exactly the approved file.
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.reels.outputs.r1 != ''
+        with:
+          name: ${{ steps.reels.outputs.r1 }}
+          path: out/artifacts/${{ steps.reels.outputs.r1 }}/${{ steps.reels.outputs.r1 }}.mp4
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: error
+          compression-level: 0
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.reels.outputs.r2 != ''
+        with:
+          name: ${{ steps.reels.outputs.r2 }}
+          path: out/artifacts/${{ steps.reels.outputs.r2 }}/${{ steps.reels.outputs.r2 }}.mp4
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: error
+          compression-level: 0
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.reels.outputs.r3 != ''
+        with:
+          name: ${{ steps.reels.outputs.r3 }}
+          path: out/artifacts/${{ steps.reels.outputs.r3 }}/${{ steps.reels.outputs.r3 }}.mp4
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: error
+          compression-level: 0
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.reels.outputs.r4 != ''
+        with:
+          name: ${{ steps.reels.outputs.r4 }}
+          path: out/artifacts/${{ steps.reels.outputs.r4 }}/${{ steps.reels.outputs.r4 }}.mp4
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: error
+          compression-level: 0
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.reels.outputs.r5 != ''
+        with:
+          name: ${{ steps.reels.outputs.r5 }}
+          path: out/artifacts/${{ steps.reels.outputs.r5 }}/${{ steps.reels.outputs.r5 }}.mp4
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: error
+          compression-level: 0
+      - name: Commit produce state (own paths only)
+        if: always() && steps.gate.outputs.paused != 'true'
+        run: |
+          bash .github/scripts/commit-state.sh "state(produce): $(TZ=Asia/Kolkata date +%F)" \
+            data/trends data/ideas data/backlog data/specs data/qa data/queue data/agent-runs data/runs \
+            data/usage.json progress/runs
+      - name: Minutes report
+        if: always()
+        env:
+          PRODUCE_S: ${{ steps.produce.outputs.seconds }}
+          REELS: ${{ steps.reels.outputs.count }}
+        run: |
+          echo "produce: ${PRODUCE_S:-n/a}s for ${REELS:-0} reel(s)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Alert on failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: bash .github/scripts/alert.sh "produce workflow failed"

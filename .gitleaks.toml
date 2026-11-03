@@ -1,0 +1,44 @@
+# gitleaks config for Reels Engine (pre-commit hook + CI). Extends the built-in rules.
+# Docs: https://github.com/gitleaks/gitleaks#configuration (checked 2026-11-03, gitleaks 8.30.1)
+title = "reels-engine"
+
+[extend]
+useDefault = true
+
+# Meta (Facebook / Instagram Graph) access tokens: user, page and app tokens start with "EAA".
+[[rules]]
+id = "meta-graph-access-token"
+description = "Meta Graph API access token"
+regex = '''\bEAA[A-Za-z0-9]{60,}\b'''
+keywords = ["eaa"]
+
+# Telegram bot token: <digits>:<35 url-safe chars>.
+[[rules]]
+id = "telegram-bot-token-strict"
+description = "Telegram Bot API token"
+regex = '''\b\d{8,10}:[A-Za-z0-9_-]{35}\b'''
+keywords = [":"]
+
+# Claude Code OAuth token from `claude setup-token`.
+[[rules]]
+id = "claude-oauth-token"
+description = "Claude Code OAuth token"
+regex = '''\bsk-ant-oat\d{2}-[A-Za-z0-9_-]{20,}'''
+keywords = ["sk-ant-"]
+
+# Any non-empty assignment of a known secret variable in an env-style file.
+[[rules]]
+id = "reels-engine-env-assignment"
+description = "Secret variable assigned a value in an env-style file"
+regex = '''(?m)^\s*(?:export\s+)?(CLAUDE_CODE_OAUTH_TOKEN|META_APP_SECRET|META_PAGE_ACCESS_TOKEN|CLOUDFLARE_API_TOKEN|TELEGRAM_BOT_TOKEN|HF_TOKEN|YOUTUBE_API_KEY|ANTHROPIC_API_KEY)\s*=\s*["']?([A-Za-z0-9_\-.:|]{12,})'''
+secretGroup = 2
+keywords = ["_token", "_secret", "_key"]
+
+[[allowlists]]
+description = "Templates, lockfiles and deliberately fake test fixtures"
+paths = [
+  '''(^|/)api_keys/\.env\.example$''',
+  '''(^|/)package-lock\.json$''',
+  '''(^|/)tests/fixtures/''',
+  '''^out/''',
+]

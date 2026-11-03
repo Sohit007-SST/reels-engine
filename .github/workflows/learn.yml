@@ -1,0 +1,75 @@
+# Weekly learning proposals (spec 8): Sunday 22:07 IST = 16:37 UTC. LEARNING_MODE=propose sends proposals to Telegram; nothing is applied without approval.
+name: learn
+
+on:
+  schedule:
+    - cron: '37 16 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write # commits data/proposals
+
+concurrency:
+  group: learn
+  cancel-in-progress: false
+
+env:
+  ENV_FILE: api_keys/.env # absent on the runner; settings come from repository variables
+  PUBLISH_MODE: ${{ vars.PUBLISH_MODE || 'dry_run' }}
+  REPLY_MODE: ${{ vars.REPLY_MODE || 'approval' }}
+  LEARNING_MODE: ${{ vars.LEARNING_MODE || 'propose' }}
+  REELS_PER_DAY: ${{ vars.REELS_PER_DAY || '3' }}
+  PIPELINE_PAUSED: ${{ vars.PIPELINE_PAUSED || 'false' }}
+  TIMEZONE: ${{ vars.TIMEZONE || 'Asia/Kolkata' }}
+  META_GRAPH_VERSION: ${{ vars.META_GRAPH_VERSION }}
+  CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+  MAX_DAILY_SPEND_USD: ${{ vars.MAX_DAILY_SPEND_USD || '0' }}
+  ARTIFACT_RETENTION_DAYS: ${{ vars.ARTIFACT_RETENTION_DAYS || '3' }}
+
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Kill switch
+        id: gate
+        run: bash .github/scripts/kill-switch.sh
+      - uses: ./.github/actions/setup-node
+        if: steps.gate.outputs.paused != 'true'
+        with:
+          remotion: 'false'
+      - name: Install Claude Code CLI
+        if: steps.gate.outputs.paused != 'true'
+        run: npm install -g @anthropic-ai/claude-code --no-audit --no-fund
+      - name: Run learn
+        id: run
+        if: steps.gate.outputs.paused != 'true'
+        timeout-minutes: 25
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          META_PAGE_ACCESS_TOKEN: ${{ secrets.META_PAGE_ACCESS_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          t0=$(date +%s)
+          npm run learn
+          echo "seconds=$(( $(date +%s) - t0 ))" >> "$GITHUB_OUTPUT"
+      - name: Commit learn state (own paths only)
+        if: always() && steps.gate.outputs.paused != 'true'
+        run: |
+          bash .github/scripts/commit-state.sh "state(learn): $(TZ=Asia/Kolkata date +%F)" data/proposals
+      - name: Minutes report
+        if: always()
+        env:
+          RUN_S: ${{ steps.run.outputs.seconds }}
+        run: |
+          echo "learn: ${RUN_S:-n/a}s" >> "$GITHUB_STEP_SUMMARY"
+      - name: Alert on failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: bash .github/scripts/alert.sh "learn workflow failed"

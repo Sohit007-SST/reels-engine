@@ -1,0 +1,39 @@
+# ===== Secrets (never commit) =====
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+api_keys/.env
+api_keys/.env.*
+!api_keys/.env.example
+*.pem
+*.key
+*.p12
+secrets/
+
+# ===== Dependencies / environments =====
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# ===== Generated media, renders, model caches =====
+out/
+models/
+*.mp4
+*.wav
+*.mov
+*.m4a
+.cache/
+.remotion/
+
+# ===== Build / tooling =====
+dist/
+coverage/
+*.tsbuildinfo
+.deps.lock
+.DS_Store
+npm-debug.log*
+.vitest/

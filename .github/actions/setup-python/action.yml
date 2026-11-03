@@ -1,0 +1,29 @@
+name: Setup Python (TTS + timings)
+description: >-
+  Python 3.12 from .python-version with pip cache, pinned requirements.txt into .venv,
+  espeak-ng + ffmpeg, and cached Kokoro / Whisper models under models/.
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v6
+      with:
+        python-version-file: .python-version
+        cache: pip
+        cache-dependency-path: requirements.txt
+    - name: System packages (espeak-ng, ffmpeg)
+      shell: bash
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq --no-install-recommends espeak-ng ffmpeg
+    - name: Create .venv from pinned requirements
+      shell: bash
+      run: |
+        python -m venv .venv
+        .venv/bin/pip install --quiet --upgrade pip
+        .venv/bin/pip install --quiet -r requirements.txt
+    - name: Cache Kokoro + Whisper models
+      uses: actions/cache@v4
+      with:
+        path: models
+        key: models-${{ runner.os }}-${{ hashFiles('requirements.txt', 'python/*.py') }}
+        restore-keys: models-${{ runner.os }}-

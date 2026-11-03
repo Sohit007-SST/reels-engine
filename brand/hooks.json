@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "formulas": [
+    {
+      "id": "what_if",
+      "template": "What if [familiar thing] [impossible change]?",
+      "description": "Hypothetical twist on something everyone knows",
+      "example": "What if the Moon vanished tonight?",
+      "enabled": true
+    },
+    {
+      "id": "pov",
+      "template": "POV: you're [role] in [time or place].",
+      "description": "Drop the viewer into a role, place and era",
+      "example": "POV: you're a scribe in ancient Alexandria.",
+      "enabled": true
+    },
+    {
+      "id": "nobody_talks",
+      "template": "Nobody talks about [surprising fact].",
+      "description": "Overlooked fact framed as insider knowledge",
+      "example": "Nobody talks about Earth's second moon.",
+      "enabled": true
+    },
+    {
+      "id": "shocking_number",
+      "template": "This [thing] was [shocking number] [unit].",
+      "description": "Lead with a specific, surprising number",
+      "example": "This storm was 3 Earths wide.",
+      "enabled": true
+    },
+    {
+      "id": "stop_scrolling",
+      "template": "Stop scrolling if you [specific trait].",
+      "description": "Call out a specific viewer trait",
+      "example": "Stop scrolling if you love the night sky.",
+      "enabled": true
+    },
+    {
+      "id": "seconds_to",
+      "template": "[Number] seconds to [payoff].",
+      "description": "Promise a fast, concrete payoff",
+      "example": "30 seconds to understand black holes.",
+      "enabled": true
+    },
+    {
+      "id": "real_reason",
+      "template": "The real reason [common belief] is wrong.",
+      "description": "Correct a common misconception",
+      "example": "The real reason the sky is blue is wrong.",
+      "enabled": true
+    },
+    {
+      "id": "asked_ai",
+      "template": "I asked AI to show [vivid scenario]…",
+      "description": "AI-visualization framing of a vivid scenario",
+      "example": "I asked AI to show Earth with rings…",
+      "enabled": true
+    },
+    {
+      "id": "watch_what_happens",
+      "template": "Watch what happens when [cause].",
+      "description": "Cause-and-effect setup",
+      "example": "Watch what happens when Earth stops spinning.",
+      "enabled": true
+    },
+    {
+      "id": "famous_but",
+      "template": "[Famous place or event], but [twist].",
+      "description": "Familiar place or event with a twist",
+      "example": "The pyramids, but built today.",
+      "enabled": true
+    },
+    {
+      "id": "doing_wrong",
+      "template": "You've been doing [thing] wrong.",
+      "description": "Challenge a habit or assumption",
+      "example": "You've been picturing dinosaurs wrong.",
+      "enabled": true
+    },
+    {
+      "id": "part_n",
+      "template": "Part [n]: [cliffhanger from the last episode].",
+      "description": "Series continuation from a cliffhanger",
+      "example": "Part 2: the Moon is gone. Now the tides…",
+      "enabled": true
+    }
+  ],
+  "leaderboard": []
+}

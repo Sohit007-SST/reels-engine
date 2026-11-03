@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "name": "TBD",
+  "handle": null,
+  "niche": "\"What if\" science & history (space, ancient worlds, Earth)",
+  "audience": "Curious 18–34 English-speaking viewers who like science, space and history explained as vivid what-if stories",
+  "language": "en",
+  "voice": {
+    "provider": "kokoro",
+    "voiceId": "af_heart",
+    "lang": "en-us",
+    "speed": 1.08,
+    "beatGapMs": 120
+  },
+  "tone": "Warm, curious, a little dramatic; plain words; facts stated carefully; hypotheticals always framed as 'what if'",
+  "palette": {
+    "background": "#0B1020",
+    "surface": "#151C33",
+    "primary": "#5B8CFF",
+    "accent": "#FFB547",
+    "text": "#F5F7FF",
+    "mutedText": "#A9B3D1",
+    "highlight": "#FFE066"
+  },
+  "fonts": {
+    "heading": "Anton",
+    "body": "Inter",
+    "captions": "Montserrat"
+  },
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "minSeconds": 20,
+    "maxSeconds": 60,
+    "targetSeconds": 30,
+    "maxBytes": 20000000
+  },
+  "safeZone": {
+    "topPct": 10,
+    "bottomPct": 20,
+    "leftPct": 5,
+    "rightPct": 12
+  },
+  "audio": {
+    "targetLufs": -14,
+    "truePeakDb": -1,
+    "musicDuckDb": -14,
+    "defaultMood": "wonder"
+  },
+  "slots": {
+    "3": ["08:30", "13:00", "19:30"],
+    "5": ["08:30", "11:30", "14:00", "18:30", "21:30"]
+  },
+  "hashtagPool": [
+    "#whatif",
+    "#space",
+    "#science",
+    "#history",
+    "#ancienthistory",
+    "#astronomy",
+    "#earth",
+    "#sciencefacts",
+    "#didyouknow",
+    "#aiart"
+  ],
+  "hashtagsPerReel": { "min": 3, "max": 5 },
+  "disclosure": {
+    "captionLine": "Visuals and voice made with AI. 'What if' scenarios are hypothetical.",
+    "includeInCaption": true,
+    "bioLine": "AI-made what-if stories about space, Earth and history."
+  },
+  "styleSuffix": "cinematic digital illustration, rich deep-blue and amber palette, soft volumetric light, painterly detail, no text, no watermark, vertical composition",
+  "negativePrompt": "text, letters, watermark, logo, brand, signature, real person, celebrity, politician, famous character, copyrighted character, deformed hands, extra fingers, distorted face, gore, child",
+  "mascot": {
+    "enabled": true,
+    "name": null,
+    "notes": "Original SVG character; see brand/mascot.md"
+  },
+  "formats": [
+    { "id": "what_if", "name": "What if…", "weight": 0.5, "enabled": true },
+    { "id": "fact_countdown", "name": "Countdown of surprising facts", "weight": 0.25, "enabled": true },
+    { "id": "pov_history", "name": "POV: you're in [time/place]", "weight": 0.25, "enabled": true }
+  ],
+  "scoringWeights": {
+    "watchTime": 0.35,
+    "shares": 0.25,
+    "saves": 0.2,
+    "comments": 0.1,
+    "skipRate": 0.1
+  },
+  "retention": {
+    "videoDays": 3,
+    "logDays": 30,
+    "localOutDays": 7
+  }
+}

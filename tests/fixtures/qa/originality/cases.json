@@ -1,0 +1,45 @@
+{
+  "_note": "Calibration cases. expect = minimum verdict: copied | caught (borderline or copied) | original.",
+  "cases": [
+    {
+      "id": "copied-verbatim",
+      "expect": "copied",
+      "text": "What if the Moon vanished? Scientists say that if the Moon disappeared tonight, ocean tides would shrink to about one third of their height, nights would turn pitch black, and within a few million years Earth's axis could start to wobble wildly."
+    },
+    {
+      "id": "copied-own-reel",
+      "expect": "copied",
+      "text": "What if Earth stopped spinning for one second? Everything that is not bolted down would keep moving east at a thousand miles an hour, and the oceans would surge over the land."
+    },
+    {
+      "id": "copied-sentence-inside-new-text",
+      "expect": "caught",
+      "text": "Picture standing on a quiet beach at night. Then imagine one volcanic eruption in 1815 made the next summer vanish across Europe and nobody knew why. The sky turned red for months."
+    },
+    {
+      "id": "paraphrased-moon",
+      "expect": "caught",
+      "text": "Researchers believe that if our Moon vanished tonight, the ocean tides would drop to roughly a third of their usual height, every night would become completely dark, and over a few million years the tilt of Earth's axis might begin to wobble wildly and ruin the seasons we depend on."
+    },
+    {
+      "id": "paraphrased-library",
+      "expect": "caught",
+      "text": "That great library did not burn in a single dramatic fire. It declined slowly across centuries as the money ran out, the scholars left and its scrolls were scattered over the ancient Mediterranean world."
+    },
+    {
+      "id": "original-same-topic",
+      "expect": "original",
+      "text": "What if Mars had a giant moon like ours? Martian nights would glow silver, dust storms would cast moving shadows on the surface, and future colonists could watch a total eclipse almost every month from their domes."
+    },
+    {
+      "id": "original-with-common-phrases",
+      "expect": "original",
+      "text": "What if octopuses lived on land? Their skin would dry out in minutes, so they would hide under wet leaves and hunt beetles at dawn. Did you know they taste with their arms? Follow for part 2. Like and follow. Save this for later."
+    },
+    {
+      "id": "benign-cta-only",
+      "expect": "original",
+      "text": "Follow for part 2."
+    }
+  ]
+}

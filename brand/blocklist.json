@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "notes": "Banned topics and words (spec 2.13 content safety). Matching is case-insensitive. Extend with owner approval.",
+  "topics": [
+    "real people's likeness (celebrities, politicians, public figures)",
+    "brand logos or trademarks",
+    "copyrighted characters",
+    "content aimed at children",
+    "medical advice",
+    "financial or investment advice",
+    "legal advice",
+    "fake news or real-world current-event claims presented as fact",
+    "elections and partisan politics",
+    "religion presented as fact or mockery",
+    "violence, gore or self-harm",
+    "hate or harassment",
+    "conspiracy theories presented as fact"
+  ],
+  "words": [
+    "cure",
+    "guaranteed",
+    "get rich",
+    "investment tip",
+    "diagnose",
+    "breaking news",
+    "kill yourself",
+    "nsfw"
+  ],
+  "patterns": [
+    "\\b(buy|sell)\\s+(this\\s+)?(stock|crypto|coin)\\b",
+    "\\b(doctors?|scientists?)\\s+hate\\s+(him|her|this)\\b",
+    "\\b100%\\s+(true|real|proven)\\b"
+  ]
+}
