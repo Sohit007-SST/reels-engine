@@ -1,9 +1,9 @@
 # Decisions
 
-All kickoff answers below (DEC-001..DEC-012) are **DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)**. Each is recorded with the template fields; "Decided by" is "Default (owner instruction)" until the owner confirms.
+All kickoff answers below (DEC-001..DEC-012) were applied as defaults on 2026-11-03 and **CONFIRMED by Sohit in chat on 2026-11-04** ("I confirm all decisions that are made by you"). DEC-013 was the owner's own request.
 
 ### DEC-001: Niche and target audience
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Options considered:** "What if" history; mythology and folklore; unsolved mysteries; recurring animal characters; space and science. Realistic AI-video-with-sound formats (street interviews, ASMR) marked "later" (paid models).
 - **Decision:** "What if" science & history (space, ancient worlds, Earth) for curious 18–34 English-speaking viewers.
 - **Why:** story-driven, suits animated AI stills + motion graphics on the free stack, low likeness/copyright risk.
@@ -11,7 +11,7 @@ All kickoff answers below (DEC-001..DEC-012) are **DEFAULT applied — owner sai
 - **Revisit when:** after 4 weeks of metrics
 
 ### DEC-002: Voiceover language
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Options considered:** English (default); Hindi (Kokoro Hindi voices, sample first)
 - **Decision:** English (`en`, Kokoro voice `af_heart`, speed 1.08)
 - **Why:** best free voice quality
@@ -19,62 +19,62 @@ All kickoff answers below (DEC-001..DEC-012) are **DEFAULT applied — owner sai
 - **Revisit when:** owner wants a Hindi channel
 
 ### DEC-003: Instagram handle
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** handle TBD; new account (M3)
 - **Affects:** brand.json name/handle, M3–M6
 - **Revisit when:** owner creates the account
 
 ### DEC-004: Where it runs
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Options considered:** GitHub Actions (default); this Mac via launchd
 - **Decision:** GitHub Actions; final choice confirmed after T1.7 measures real minutes
 - **Affects:** T1.7, T7.x, budget
 - **Revisit when:** T1.7 / T7.4 minute measurements
 
 ### DEC-005: GitHub repo visibility
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** private (about 2,000 standard Linux minutes/month on GitHub Free)
 - **Affects:** T1.7, T7.x
 - **Revisit when:** minutes run short
 
 ### DEC-006: Reels per day at launch
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** 3 (slots 08:30, 13:00, 19:30 IST); final cadence set after staging (T7.4)
 - **Affects:** REELS_PER_DAY, brand.json slots
 - **Revisit when:** T7.4
 
 ### DEC-007: Publishing approval
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** `approval` at launch; **currently `PUBLISH_MODE=dry_run`** (zero external writes). `auto` only on a later explicit owner instruction.
 - **Affects:** PUBLISH_MODE, T6.x, T7.x
 - **Revisit when:** G9 passes (owner switches to approval, M15)
 
 ### DEC-008: Comment replies
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** `REPLY_MODE=approval` (drafts go to Telegram)
 - **Affects:** T8.3
 - **Revisit when:** G10
 
 ### DEC-009: Weekly learning
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** `LEARNING_MODE=propose`
 - **Affects:** T8.2, brand/playbook.md
 - **Revisit when:** G10
 
 ### DEC-010: Mascot narrator
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** yes — original SVG character (brand/mascot.md)
 - **Affects:** T3.2
 - **Revisit when:** owner reviews samples (M13)
 
 ### DEC-011: Main feed vs trial reels
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** all main feed in week 1; later 3 main + extras as trial reels
 - **Affects:** placement field, T6.4 (the single live test is a trial reel per spec), T8.4
 - **Revisit when:** after week 1
 
 ### DEC-012: Data retention
-- **Date:** 2026-11-03 · **Decided by:** Default (owner instruction) — DEFAULT applied — owner said 'just build, all permissions given'; owner must confirm or override (see OWNER_STEPS)
+- **Date:** 2026-11-03 · **Decided by:** Sohit — default CONFIRMED by owner in chat on 2026-11-04
 - **Decision:** rendered videos 3 days or until publishing is confirmed; local out/ 7 days; logs 30 days; specs, metrics and progress kept in git
 - **Affects:** ARTIFACT_RETENTION_DAYS, brand.json retention, T5.3
 - **Revisit when:** storage limits are hit

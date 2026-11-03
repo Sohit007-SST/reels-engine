@@ -19,7 +19,7 @@ Statuses verified by the final reviewer on 2026-11-03 by re-running the checks (
 
 | Gate | Status | Evidence | Date |
 |------|--------|----------|------|
-| G0 Ready | DONE (provisional) | LOCAL — api_keys/01–07 present; DEC-001..013 recorded as defaults (owner confirmation pending); environment report below; capability register seeded C01–C22 | 2026-11-03 |
+| G0 Ready | DONE | LOCAL — api_keys/01–07 present; DEC-001..013 confirmed by owner 2026-11-04; environment report below; capability register seeded C01–C22 | 2026-11-03 |
 | G1 Foundation | DONE (LOCAL) | LOCAL — `npm ci` clean; `npm run typecheck` 0 errors; `npm run lint` clean; `npm run format:check` clean; `SKIP_RENDER_TESTS=1 npx vitest run` 35 files / 364 passed, 2 skipped; redaction tests (tests/foundation/redact.test.ts); doctor PRESENT vs VALID (tests/ops/doctor.test.ts). CI from a clean checkout not run yet (T1.7, needs M2+M11) | 2026-11-03 |
 | G2 First reel | NEEDS_OWNER | LOCAL — `npm run reel:fixture` → out/2026-11-03-90/reel.mp4 (h264 1080x1920 30 fps, AAC 48 kHz, 25.6 s, −14.1 LUFS, −1.4 dBTP, caption drift ≤ 50 ms); technical defect fixtures fail QA (tests/qa/technical.test.ts, visual.test.ts). Caveat: QA "pass" used the labelled FAKE visual reviewer; the real Claude reviewer FAILED it on `visual.on_brand` (qa-report.claude-reviewer.json). Owner review M13 not done | — |
 | G3 Agents | PARTIAL | LOCAL + UNIT — strict zod outputs, one repair retry then reject (tests/agents/runAgent.test.ts); injection fixtures pass (tests/agents/injection.test.ts); agent env = HOME/PATH/USER only; agents:sync --check exit 0. Missing: T4.8 3-reel dry run (1 reel ran and was rejected by the real reviewer); no SUPPORTED claim with a real source yet | — |
@@ -201,3 +201,4 @@ Node packages (exact pins): remotion + @remotion/{cli,renderer,bundler,google-fo
 - **21:51 IST:** limits reset; multi-agent build RESUMED from run wf_74f3c45c-fa2 (foundation cached; 6 builders → bug-checkers → integrator → reviews → recorder). Session ID c6dd6993-23ec-4027-8a73-8c279b99b85b.
 - **21:56 IST:** switched to a token-lean plan to finish before the 02:30 limit reset: foundation cached; 6 builders run 2 at a time (self-review included); 1 combined bug-checker; 1 integrator; 1 final reviewer/recorder (9 agents total, max 2 concurrent).
 - **22:45 IST final review:** gates re-audited, security test added, OWNER_STEPS.md written, records updated; committed as "Final review, progress records and owner steps".
+- **2026-11-04:** Owner confirmed all default decisions DEC-001..DEC-013 (OWNER_STEPS step 1). G0 now DONE. Next owner step: step 2 (create api_keys/.env).
