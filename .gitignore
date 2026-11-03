@@ -37,3 +37,4 @@ coverage/
 .DS_Store
 npm-debug.log*
 .vitest/
+.claude/settings.local.json

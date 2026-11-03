@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(git add *)",
-      "Bash(git commit -qm 'Add allowlist-only GitHub secrets uploader; record repo creation *)",
-      "Bash(gh run *)"
-    ]
-  }
-}
