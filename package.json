@@ -35,7 +35,8 @@
     "audio": "tsx src/media/cli.ts voice",
     "audio:assets": "tsx src/media/cli.ts assets",
     "prepare": "sh .githooks/install.sh",
-    "publish:cron": "tsx src/cli/gen-publish-cron.ts"
+    "publish:cron": "tsx src/cli/gen-publish-cron.ts",
+    "github:secrets": "tsx src/cli/github-secrets.ts"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.540",
