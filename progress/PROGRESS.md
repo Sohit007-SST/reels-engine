@@ -10,8 +10,23 @@
 | Model | Opus 5.5 |
 | Started | 2026-11-03 |
 
-Last updated: 2026-11-03 22:45 IST (final review) · Last gate passed: G1 (LOCAL), G5 (UNIT), G7 (MOCKED/LOCAL) · Current phase: 2 (G2 waits for owner review M13) · Next task: owner steps in OWNER_STEPS.md, then T2.7 review, T1.6, T1.7
-Waiting on Sohit: confirm DEC-001..DEC-013; M13 (review fixture reel); M2, M3–M6, M7, M8, M11 (keys and logins). See OWNER_STEPS.md.
+Last updated: 2026-11-07 (pause point) · Last gates passed: G0 (DONE), G1 (LOCAL + CI), G5 (UNIT), G7 (MOCKED + LOCAL) · Current phase: 2–3 (waiting on owner keys) · Next task: T1.6 Instagram read-only check (after M3–M6), then T3.4/T3.5 AI images (after M7)
+Waiting on Sohit: M3–M6 (Instagram professional account, Facebook Page, Meta app + token), M7 (Cloudflare Workers AI), M8 (Telegram bot). Optional: M9 (YouTube), M10 (Hugging Face), M12 (watchlist). See OWNER_STEPS.md and progress/MANUAL_TASKS.md.
+
+## Where to resume (read this first when you come back)
+
+The project is **paused** as of 2026-11-07. Everything is saved and pushed to GitHub (private repo `Sohit007-SST/reels-engine`, branch `main`).
+
+- **Working now:** full local pipeline (trend → idea → hooks → script → voice → captions → render → QA → queue) in `dry_run` mode with zero external writes; CI green on GitHub; Claude runs headless on GitHub Actions (T1.7).
+- **Not live yet:** nothing posts to Instagram. Mode stays `dry_run`. Scheduled workflows (produce/publish/analyze/learn) are disabled until staging (T7.4).
+- **To restart a session:** open Claude Code in this folder and say "continue the project". Claude will follow the session protocol in CLAUDE.md (git status → read progress files → re-check the last task → 3-line status).
+- **Next owner steps, in order:**
+  1. M3–M6: Instagram professional account, Facebook Page, Meta developer app and long-lived token → unblocks T1.6, T6.1 and gate G6.
+  2. M7: Cloudflare account + Workers AI token → unblocks AI images (T3.4, T3.5, T3.8) and should fix the visual reviewer's `on_brand` failure on text-only reels.
+  3. M8: Telegram bot → unblocks approvals (T7.3).
+  4. After each key is added to `api_keys/.env`, run `npm run doctor` to confirm it shows PRESENT/VALID.
+- **Next build tasks (no owner action needed):** T9.2 restore drill; T4.7 add a paraphrase-specific originality fixture.
+- **Known issue:** the real Claude visual reviewer rejects text-only reels on `visual.on_brand`; expected to clear once real AI images (M7) are in.
 
 ## Gates
 
@@ -188,6 +203,8 @@ Node packages (exact pins): remotion + @remotion/{cli,renderer,bundler,google-fo
 |------------|------------------------------------|-----------|--------------------------|
 | 2026-11-03 | G0 (provisional); T0.1, T0.3, T1.3, T1.4, T1.5 DONE; T1.1, T1.2 IN_PROGRESS; 98 tests pass | parallel builders: T1.2 doctor, T2.x slice, T4.1, T5.1 | owner: confirm DEC defaults; M2, M3–M6, M11 |
 | 2026-11-03 | final review: G1 LOCAL, G5 UNIT, G7 MOCKED+LOCAL pass; G2 needs owner (real reviewer fails on_brand); 364 tests pass; gitleaks clean incl. history; session c6dd6993-23ec-4027-8a73-8c279b99b85b | owner: OWNER_STEPS.md; then T2.7 review, T1.6, T1.7, T9.2 | real visual reviewer fails text-only reels (needs M7 images); no failing tests |
+| 2026-11-04 | M2, M11 done; CI green (run 41720347963); T1.7 DONE (CI, runs 41721722741 + 41721949100); repo pushed (private) | owner: M3–M7, M8 | none failing |
+| 2026-11-07 | pause point saved; local `main` = `origin/main` (no unpushed work) | resume with M3–M6 → T1.6 | waiting on owner keys; no failing tests |
 
 ## Manager log — build pause (2026-11-03 20:49 IST)
 - **Session:** instagram_project (untitled) · ID `c6dd6993-23ec-4027-8a73-8c279b99b85b` · resume: `claude --resume c6dd6993-23ec-4027-8a73-8c279b99b85b`
